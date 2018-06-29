@@ -44,7 +44,7 @@ Clone this repo and run `vagrant up` for the OP5 installation you want:
 
 If you run `vagrant up` without specifying a machine, they will all be deployed.
 
-Port forwarding is tied to CentOS version:
+Ports chosen for forwarding are related to the CentOS version to make them easier to remember:
 
 * 443 -> 4436 (CentOS 6)
 * 443 -> 4437 (CentOS 7)
