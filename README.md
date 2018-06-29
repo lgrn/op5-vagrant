@@ -4,6 +4,25 @@
 
 While this Vagrant setup makes use of OP5 Monitor, any code in this repository is **strictly unsupported** and comes completely without any type of warranty. For more information, please see [LICENSE](https://github.com/lgrn/op5-vagrant/blob/master/LICENSE).
 
+## Requirements
+
+You need a working Vagrant installation, and a working provider. This configuration assumes Virtualbox.
+
+## Why
+
+### What is Vagrant?
+
+Vagrant is a tool for building and managing virtual machine environments in a single workflow.
+
+### Is Vagrant Docker?
+
+No, because Docker does not spin up virtual machines. "Vagrant is a tool focused on providing a consistent development environment workflow across multiple operation systems. Docker is a container management that can consistently run software as long as a containerization system exists."
+
+### Some use cases
+
+* You want a clean install of a certain version of OP5 Monitor on a Centos 6/7 (or both) system/s quickly to test something out.
+* You want a pre-configured environment with a master and poller (not implemented yet)
+
 ## Example use
 
 Clone this repo and run `vagrant up` for the OP5 installation you want:
