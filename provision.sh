@@ -23,7 +23,6 @@ OP5CMD='wget -p /vagrant/ https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_mo
 
 # $OP5CMD/op5-monitor-6.3.3-20140912.tar.gz
 
-
 if [ ! -f /vagrant/op5-monitor*gz ]; then
     echo "[>>>] Didn't find any op5-monitor file in the vagrant directory. We're doing it live!"
     cd /tmp && wget https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Latest/op5-monitor-latest.tar.gz && tar xvf op5*.gz
