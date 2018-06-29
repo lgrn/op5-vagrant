@@ -23,6 +23,18 @@ No, because Docker does not spin up virtual machines. "Vagrant is a tool focused
 * You want a clean install of a certain version of OP5 Monitor on a Centos 6/7 (or both) system/s quickly to test something out.
 * You want a pre-configured environment with a master and poller (not implemented yet)
 
+## Components
+
+### Vagrantfile
+
+"The primary function of the Vagrantfile is to describe the type of machine required for a project, and how to configure and provision these machines."
+
+For more information, see: https://www.vagrantup.com/docs/vagrantfile/
+
+### provision.sh
+
+This shell-script is loaded when initially deploying a machine. It will install grab Monitor from the working directory, or from the Internet, and install it.
+
 ## Example use
 
 Clone this repo and run `vagrant up` for the OP5 installation you want:
