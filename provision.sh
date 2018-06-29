@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# some stuff we want, and an upgrade
+
+yum install wget -y && yum upgrade -y
+
 ### MANUAL VERSION SELECTION BELOW
 ### Uncomment a wget-line below to get that version of Monitor.
 ### If no file exists, "latest" will be grabbed automatically.
