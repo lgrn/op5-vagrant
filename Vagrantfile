@@ -3,14 +3,20 @@
 
 Vagrant.configure("2") do |config|
 
-  #config.vm.box = "centos/6"
-  config.vm.box = "centos/7"
-  config.vm.network "forwarded_port", guest: 80, host: 8080
-  config.vm.network "forwarded_port", guest: 443, host: 4433
-  config.vm.provider "virtualbox" do |vb|
-     vb.memory = "1024"
-  end
-
   config.vm.provision "shell", path: "provision.sh"
-
+  
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "1024"
+  end
+  
+  config.vm.define "centos6" do |centos6|
+    centos6.vm.box = "centos/6"
+	centos6.vm.network "forwarded_port", guest: 443, host: 4436
+  end
+  
+  config.vm.define "centos7" do |centos7|
+    centos7.vm.box = "centos/7"
+	centos7.vm.network "forwarded_port", guest: 443, host: 4437
+  end
+  
 end
