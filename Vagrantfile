@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
   
   config.vm.define "centos6" do |centos6|
     centos6.vm.box = "centos/6"
-    centos6.hostname = %x(python3 diablo-name.py EL6).chomp
+    centos6.vm.hostname = %x(python3 diablo-name.py EL6).chomp
     centos6.vm.network "forwarded_port", guest: 443, host: 4436
     centos6.vm.provision "shell", path: "provision.sh"
   end
