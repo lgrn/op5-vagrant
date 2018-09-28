@@ -12,6 +12,10 @@ OP5URL='-q https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive'
 
 # Uncomment a wget line if you want the version specified to replace 'latest':
 
+# wget $OP5URL/op5-monitor-7.4.6.x64.tar.gz
+# wget $OP5URL/op5-monitor-7.4.5-20180806.tar.gz
+# wget $OP5URL/op5-monitor-7.4.3-20180612.tar.gz
+# wget $OP5URL/OP5-Monitor-7.4.4-20180711.tar.gz
 # wget $OP5URL/op5-monitor-7.4.2-20180515.tar.gz
 # wget $OP5URL/op5-monitor-7.4.1-20180420.tar.gz
 # wget $OP5URL/op5-monitor-7.4.0-20180320.tar.gz
@@ -27,7 +31,7 @@ OP5URL='-q https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive'
 
 ### NO CHANGES BELOW PLEASE ###
 
-if [ ! -f /vagrant/*monitor*gz ]; then
+if [ ! -f /vagrant/*onitor*gz ]; then
     echo "[>>>] Didn't find any *monitor* file in /vagrant. We're doing it live!"
 	echo "[>>>] Grabbing op5-monitor-latest.tar.gz from the information superhighway."
     cd /tmp && wget https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Latest/op5-monitor-latest.tar.gz &>/dev/null && tar xvf op5*.gz &>/dev/null
@@ -35,9 +39,9 @@ if [ ! -f /vagrant/*monitor*gz ]; then
     cd op5-monitor*/ && ./install.sh --noninteractive &>/dev/null
 else
     echo "[>>>] There's an op5-monitor file in /vagrant -- using it!"
-    cd /vagrant && tar xvf *monitor*.gz 
+    cd /vagrant && tar xvf *onitor*.gz 
     echo "[>>>] Running non-interactive installation script. This will take some time."
-    cd *monitor*/ && ./install.sh --noninteractive &>/dev/null
+    cd *onitor*/ && ./install.sh --noninteractive &>/dev/null
 fi
 
 echo "[>>>] The provision script for this guest has finished."
