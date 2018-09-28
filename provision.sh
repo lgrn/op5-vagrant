@@ -27,17 +27,17 @@ OP5URL='-q https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive'
 
 ### NO CHANGES BELOW PLEASE ###
 
-if [ ! -f /vagrant/op5-monitor*gz ]; then
-    echo "[>>>] Didn't find any op5-monitor file in the vagrant directory. We're doing it live!"
+if [ ! -f /vagrant/*monitor*gz ]; then
+    echo "[>>>] Didn't find any *monitor* file in /vagrant. We're doing it live!"
 	echo "[>>>] Grabbing op5-monitor-latest.tar.gz from the information superhighway."
     cd /tmp && wget https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Latest/op5-monitor-latest.tar.gz &>/dev/null && tar xvf op5*.gz &>/dev/null
     echo "[>>>] Whoosh! Download complete. Running non-interactive installation script. This will take some time."
     cd op5-monitor*/ && ./install.sh --noninteractive &>/dev/null
 else
     echo "[>>>] There's an op5-monitor file in /vagrant -- using it!"
-    cd /vagrant && tar xvf op5*.gz 
+    cd /vagrant && tar xvf *monitor*.gz 
     echo "[>>>] Running non-interactive installation script. This will take some time."
-    cd op5-monitor*/ && ./install.sh --noninteractive &>/dev/null
+    cd *monitor*/ && ./install.sh --noninteractive &>/dev/null
 fi
 
 echo "[>>>] The provision script for this guest has finished."
