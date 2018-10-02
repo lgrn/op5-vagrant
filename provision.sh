@@ -8,7 +8,7 @@ yum install wget -y -q &>/dev/null
 ### If no file is grabbed, "latest" is grabbed automatically later.
 
 cd /vagrant
-OP5URL='-q https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive'
+OP5URL='--quiet https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive'
 
 # Uncomment a wget line if you want the version specified to replace 'latest':
 
@@ -32,15 +32,15 @@ OP5URL='-q https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive'
 ### NO CHANGES BELOW PLEASE ###
 
 if [ ! -f /vagrant/*onitor*gz ]; then
-    echo "[>>>] Didn't find any *monitor* file in /vagrant. We're doing it live!"
+    echo "[>>>] Didn't find any monitor file in /vagrant"
 	echo "[>>>] Grabbing op5-monitor-latest.tar.gz from the information superhighway."
-    cd /tmp && wget https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Latest/op5-monitor-latest.tar.gz &>/dev/null && tar xvf op5*.gz &>/dev/null
-    echo "[>>>] Whoosh! Download complete. Running non-interactive installation script. This will take some time."
+    cd /tmp && wget https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Latest/op5-monitor-latest.tar.gz &>/dev/null && tar xvf *.gz &>/dev/null
+    echo "[>>>] Whoosh! Download and unpack complete. Running non-interactive installation script. This will take some time."
     cd op5-monitor*/ && ./install.sh --noninteractive &>/dev/null
 else
-    echo "[>>>] There's an op5-monitor file in /vagrant -- using it!"
+    echo "[>>>] There's already an op5-monitor file in working dir /vagrant"
     cd /vagrant && tar xvf *onitor*.gz 
-    echo "[>>>] Running non-interactive installation script. This will take some time."
+    echo "[>>>] That file is now unpacked. Running non-interactive installation script. This will take some time."
     cd *onitor*/ && ./install.sh --noninteractive &>/dev/null
 fi
 
