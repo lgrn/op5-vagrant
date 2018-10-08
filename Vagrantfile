@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
   
   config.vm.provider "virtualbox" do |vb|
-    vb.memory = "1024"
+    vb.memory = "2048"
   end
   
   config.vm.define "centos6" do |centos6|
@@ -20,12 +20,6 @@ Vagrant.configure("2") do |config|
     centos7.vm.network "forwarded_port", guest: 443, host: 4437
     centos7.vm.provision "shell", path: "provision.sh"
   end
-  
-  config.vm.define "nc" do |nc|
-    nc.vm.box = "centos/7"
-    nc.vm.hostname = %x(python3 diablo-name.py naemon).chomp
-    nc.vm.network "forwarded_port", guest: 443, host: 4439
-  end  
   
   config.vm.define "beta8" do |beta8|
     beta8.vm.box = "centos/7"
