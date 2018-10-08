@@ -36,7 +36,7 @@ if [ ! -f /vagrant/*onitor*gz ]; then
 	echo "[>>>] Grabbing op5-monitor-latest.tar.gz from the information superhighway."
     cd /tmp && wget https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Latest/op5-monitor-latest.tar.gz &>/dev/null && tar xvf *.gz &>/dev/null
     echo "[>>>] Whoosh! Download and unpack complete. Running non-interactive installation script. This will take some time."
-    cd op5-monitor*/ && ./install.sh --noninteractive &>/dev/null
+    cd *onitor*/ && ./install.sh --noninteractive &>/dev/null
 else
     echo "[>>>] There's already an op5-monitor file in working dir /vagrant"
     cd /vagrant && tar xvf *onitor*.gz 
