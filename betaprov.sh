@@ -15,6 +15,8 @@ else
     cd /vagrant && tar xvf *onitor*.gz &> /dev/null
     echo "[>>>] Unpacking done. Running non-interactive installation script. This will take some time."
     cd *onitor*/ && ./install.sh --noninteractive &>/dev/null
+    echo "[>>>] Running yum upgrade -y"
+    yum upgrade -y
 fi
 
 echo "[>>>] The provision script for this guest has finished. Beta 8 is up at port 4440."
