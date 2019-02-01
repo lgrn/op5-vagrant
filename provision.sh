@@ -33,13 +33,13 @@ OP5URL='--quiet https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_arch
 
 if [ ! -f /vagrant/*onitor*gz ]; then
     echo "[>>>] Didn't find any monitor file in /vagrant"
-	echo "[>>>] Grabbing op5-monitor-latest.tar.gz from the information superhighway."
-    cd /tmp && wget https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Latest/op5-monitor-latest.tar.gz &>/dev/null && tar xvf *.gz &>/dev/null
+	echo "[>>>] Grabbing Monitor 8 from the information superhighway."
+    cd /tmp && wget https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Monitor8/Tarball/op5-monitor-8.0.0.x64.tar.gz &>/dev/null && tar xvf *.gz &>/dev/null
     echo "[>>>] Whoosh! Download and unpack complete. Running non-interactive installation script. This will take some time."
     cd *onitor*/ && ./install.sh --noninteractive &>/dev/null
 else
     echo "[>>>] There's already an op5-monitor file in working dir /vagrant"
-    cd /vagrant && tar xvf *onitor*.gz 
+    cd /vagrant && tar xvf *onitor*.gz
     echo "[>>>] That file is now unpacked. Running non-interactive installation script. This will take some time."
     cd *onitor*/ && ./install.sh --noninteractive &>/dev/null
 fi
