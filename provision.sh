@@ -2,7 +2,7 @@
 
 # wget: may not be included
 
-yum install wget -y -q &>/dev/null
+yum install wget vim mlocate -y -q &>/dev/null
 
 ### MANUAL VERSION SELECTION BELOW -- NOT REQUIRED! LATEST VERSION WILL BE GRABBED
 ### If no file is grabbed, "latest" is grabbed automatically later.
@@ -45,5 +45,9 @@ else
 fi
 
 echo "[>>>] The provision script for this guest has finished."
-echo "[>>>] You should be able to access this Monitor instance on port 4436 (Centos6) or 4437 (Centos7)."
+echo "[>>>] Running 'yum update' for good measure."
+yum update -y -q &>/dev/null
+echo "[>>>] Yum done."
+echo "[>>>] You should be able to access this Monitor instance on:"
+echo "[>>>] https://localhost:4436 (Centos6) or https://localhost:4437 (Centos7)."
 echo "[>>>] For more information on guest configuration, see the vagrant file. Have fun!"
