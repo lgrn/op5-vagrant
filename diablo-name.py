@@ -1,11 +1,13 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import sys
-if sys.version_info[0] != (3):
-    sys.stdout.write("This software requires Python 3. This is Python {}.\n".format(sys.version_info[0]))
-    sys.exit(1)
-
 import random
+
+# -- disabled python3 check, unnecessary as this works fine in python2 --
+#if sys.version_info[0] != (3):
+#    sys.stdout.write("This software requires Python 3. This is Python {}.\n".format(sys.version_info[0]))
+#    sys.exit(1)
+
 
 try:
     input = str(sys.argv[1])
