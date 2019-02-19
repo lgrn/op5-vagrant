@@ -23,7 +23,11 @@ OP5URL='--quiet https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_arch
 # wget $OP5URL/op5-monitor-7.3.20-20180124.tar.gz
 # wget $OP5URL/op5-monitor-7.3.20-20180124.tar.gz
 # wget $OP5URL/op5-monitor-7.3.19-20171212.tar.gz
+# wget $OP5URL/op5-monitor-7.3.2-20161114.tar.gz
 # wget $OP5URL/op5-monitor-7.0.0-20140903.tar.gz
+
+# If a version is missing above, the filename may be available from:
+# https://www.op5.com/download/archives/ ("Version" dropdown)
 
 ### UNSUPPORTED VERSIONS ###
 
