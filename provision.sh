@@ -12,6 +12,7 @@ OP5URL='--quiet https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_arch
 
 # Uncomment a wget line if you want the version specified to replace 'latest':
 
+# wget $OP5URL/op5-monitor-7.4.11.x64.tar.gz
 # wget $OP5URL/op5-monitor-7.4.6.x64.tar.gz
 # wget $OP5URL/op5-monitor-7.4.5-20180806.tar.gz
 # wget $OP5URL/op5-monitor-7.4.3-20180612.tar.gz
@@ -23,7 +24,11 @@ OP5URL='--quiet https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_arch
 # wget $OP5URL/op5-monitor-7.3.20-20180124.tar.gz
 # wget $OP5URL/op5-monitor-7.3.20-20180124.tar.gz
 # wget $OP5URL/op5-monitor-7.3.19-20171212.tar.gz
+# wget $OP5URL/op5-monitor-7.3.2-20161114.tar.gz
 # wget $OP5URL/op5-monitor-7.0.0-20140903.tar.gz
+
+# If a version is missing above, the filename may be available from:
+# https://www.op5.com/download/archives/ ("Version" dropdown)
 
 ### UNSUPPORTED VERSIONS ###
 
