@@ -20,5 +20,12 @@ Vagrant.configure("2") do |config|
     centos7.vm.network "forwarded_port", guest: 443, host: 4437
     centos7.vm.provision "shell", path: "provision.sh"
   end
+  
+  config.vm.define "ncore" do |ncore|
+    ncore.vm.box = "centos/7"
+    ncore.vm.hostname = %x(python diablo-name.py core).chomp
+    ncore.vm.network "forwarded_port", guest: 443, host: 4430
+    ncore.vm.provision "shell", path: "core_provision.sh"
+  end
 
 end
