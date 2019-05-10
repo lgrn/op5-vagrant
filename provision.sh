@@ -12,6 +12,7 @@ OP5URL='--quiet https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_arch
 
 # Uncomment a wget line if you want the version specified to replace 'latest':
 
+wget $OP5URL/op5-monitor-7.5.0.x64.tar.gz
 # wget $OP5URL/op5-monitor-7.4.11.x64.tar.gz
 # wget $OP5URL/op5-monitor-7.4.6.x64.tar.gz
 # wget $OP5URL/op5-monitor-7.4.5-20180806.tar.gz
@@ -39,14 +40,14 @@ OP5URL='--quiet https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_arch
 if [ ! -f /vagrant/*onitor*gz ]; then
     echo "[>>>] Didn't find any monitor file in /vagrant"
 	echo "[>>>] Grabbing Monitor 8 from the information superhighway."
-    cd /tmp && wget https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Monitor8/Tarball/op5-monitor-8.0.0.x64.tar.gz &>/dev/null && tar xvf *.gz &>/dev/null
+    cd /tmp && wget https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Monitor8/Tarball/op5-monitor-8.0.0.x64.tar.gz &>/dev/null && tar xvf *.gz
     echo "[>>>] Whoosh! Download and unpack complete. Running non-interactive installation script. This will take some time."
-    cd *onitor*/ && ./install.sh --noninteractive &>/dev/null
+    cd *onitor*/ && ./install.sh --noninteractive
 else
     echo "[>>>] There's already an op5-monitor file in working dir /vagrant"
     cd /vagrant && tar xvf *onitor*.gz
     echo "[>>>] That file is now unpacked. Running non-interactive installation script. This will take some time."
-    cd *onitor*/ && ./install.sh --noninteractive &>/dev/null
+    cd *onitor*/ && ./install.sh --noninteractive
 fi
 
 echo "[>>>] The provision script for this guest has finished."
@@ -55,4 +56,9 @@ yum update -y -q &>/dev/null
 echo "[>>>] Yum done."
 echo "[>>>] You should be able to access this Monitor instance on:"
 echo "[>>>] https://localhost:4436 (Centos6) or https://localhost:4437 (Centos7)."
-echo "[>>>] For more information on guest configuration, see the vagrant file. Have fun!"
+# echo "[>>>] https://localhost:4446 (RHEL6)   or https://localhost:4447 (RHEL7)."
+echo "[>>>] For more information on guest configuration, see the vagrant file. Have fun!\n\n"
+echo "[!!!] If Monitor/Apache/etc needs root, you may want to take note of /etc/pam.d/su "
+echo "[!!!] On some boxes, only the 'vagrant' user is allowed to sudo. cat of file:"
+cat /etc/pam.d/su
+echo "[>>>] Provisioning done."
