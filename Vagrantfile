@@ -21,17 +21,4 @@ Vagrant.configure("2") do |config|
     centos7.vm.provision "shell", path: "provision.sh"
   end
   
-  config.vm.define "rhel6" do |rhel6|
-    rhel6.vm.box = "samdoran/rhel6"
-    rhel6.vm.hostname = %x(python diablo-name.py RH6).chomp
-    rhel6.vm.network "forwarded_port", guest: 443, host: 4446
-#    rhel6.vm.provision "shell", path: "provision.sh"
-  end
-
-  config.vm.define "rhel7" do |rhel7|
-    rhel7.vm.box = "samdoran/rhel7"
-    rhel7.vm.hostname = %x(python diablo-name.py RH7).chomp
-    rhel7.vm.network "forwarded_port", guest: 443, host: 4447
-#    rhel7.vm.provision "shell", path: "provision.sh"
-  end
 end
