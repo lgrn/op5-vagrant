@@ -61,6 +61,9 @@ echo -e "\n\n"
 echo "[>>>] If a license file exists, it will now be moved into place."
 mv -v /vagrant/*.lic /etc/op5license/
 
+echo "[>>>] Showing you time remaining for your OP5 license:"
+/opt/plugins/check_op5_license -w1 -c1 -T d
+
 echo "[>>>] The provision script for this guest has finished."
 echo "[>>>] You should be able to access this Monitor instance on:"
 echo "[>>>] https://localhost:4436 (Centos6) or https://localhost:4437 (Centos7)."
