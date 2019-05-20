@@ -53,10 +53,15 @@ else
     cd *onitor*/ && ./install.sh --noninteractive &>/dev/null
 fi
 
+# Any .lic files in /vagrant should be placed:
+
+echo "[>>>] If a license file exists, it will now be moved into place."
+mv -v /vagrant/*.lic /etc/op5license/
+
 echo "[>>>] The provision script for this guest has finished."
 echo "[>>>] You should be able to access this Monitor instance on:"
 echo "[>>>] https://localhost:4436 (Centos6) or https://localhost:4437 (Centos7)."
-echo "[>>>] For more information on guest configuration, see the vagrant file. Have fun!\n\n"
+echo "[>>>] For more information on guest configuration, see the vagraint file. Have fun!"
 echo "[!!!] If Monitor/Apache/etc needs root, you may want to take note of /etc/pam.d/su "
 echo "[!!!] On some boxes, only the 'vagrant' user is allowed to sudo. cat of file:"
 echo "[***]"
