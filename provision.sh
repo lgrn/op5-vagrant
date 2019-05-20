@@ -51,9 +51,6 @@ else
 fi
 
 echo "[>>>] The provision script for this guest has finished."
-echo "[>>>] Running 'yum update' for good measure."
-yum update -y -q &>/dev/null
-echo "[>>>] Yum done."
 echo "[>>>] You should be able to access this Monitor instance on:"
 echo "[>>>] https://localhost:4436 (Centos6) or https://localhost:4437 (Centos7)."
 # echo "[>>>] https://localhost:4446 (RHEL6)   or https://localhost:4447 (RHEL7)."
