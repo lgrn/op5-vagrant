@@ -5,6 +5,7 @@ timedatectl --adjust-system-clock
 
 # wget: may not be included
 
+echo "[>>>] Installing wget, vim and mlocate."
 yum install wget vim mlocate -y -q &>/dev/null
 
 ### MANUAL VERSION SELECTION BELOW -- NOT REQUIRED! LATEST VERSION WILL BE GRABBED
@@ -13,6 +14,7 @@ yum install wget vim mlocate -y -q &>/dev/null
 cd /vagrant
 OP5URL='--quiet https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive'
 
+echo "[>>>] In case you chose to wget a file, it will be downloaded now."
 # Uncomment a wget line if you want the version specified to replace 'latest':
 
 wget $OP5URL/op5-monitor-7.5.0.x64.tar.gz
@@ -41,18 +43,19 @@ wget $OP5URL/op5-monitor-7.5.0.x64.tar.gz
 ### NO CHANGES BELOW PLEASE ###
 
 if [ ! -f /vagrant/*onitor*gz ]; then
-    echo "[>>>] Didn't find any monitor file in /vagrant"
-	echo "[>>>] Grabbing Monitor 8 from the information superhighway."
+    echo "[>>>] Didn't find any monitor file in /vagrant -- you probably didn't supply one."
+	echo "[>>>] Grabbing Monitor 8 instead from the information superhighway."
     cd /tmp && wget https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Monitor8/Tarball/op5-monitor-8.0.0.x64.tar.gz &>/dev/null && tar xvf *.gz &>/dev/null
     echo "[>>>] Whoosh! Download and unpack complete. Running non-interactive installation script. This will take some time."
     cd *onitor*/ && ./install.sh --noninteractive &>/dev/null
 else
-    echo "[>>>] There's already an op5-monitor file in working dir /vagrant"
+    echo "[>>>] There's already an op5-monitor file in /vagrant -- most likely because you put it there. It will be used."
     cd /vagrant && tar xvf *onitor*.gz &>/dev/null
     echo "[>>>] That file is now unpacked. Running non-interactive installation script. This will take some time."
     cd *onitor*/ && ./install.sh --noninteractive &>/dev/null
 fi
 
+echo -e "\n\n"
 # Any .lic files in /vagrant should be placed:
 
 echo "[>>>] If a license file exists, it will now be moved into place."
