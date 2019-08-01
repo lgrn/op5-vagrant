@@ -17,7 +17,7 @@ OP5URL='--quiet https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_arch
 echo "[>>>] In case you chose to wget a file, it will be downloaded now."
 # Uncomment a wget line if you want the version specified to replace 'latest':
 
-wget $OP5URL/op5-monitor-7.5.0.x64.tar.gz
+# wget $OP5URL/op5-monitor-7.5.0.x64.tar.gz
 # wget $OP5URL/op5-monitor-7.4.11.x64.tar.gz
 # wget $OP5URL/op5-monitor-7.4.6.x64.tar.gz
 # wget $OP5URL/op5-monitor-7.4.5-20180806.tar.gz
@@ -45,7 +45,7 @@ wget $OP5URL/op5-monitor-7.5.0.x64.tar.gz
 if [ ! -f /vagrant/*onitor*gz ]; then
     echo "[>>>] Didn't find any monitor file in /vagrant -- you probably didn't supply one."
 	echo "[>>>] Grabbing Monitor 8 instead from the information superhighway."
-    cd /tmp && wget https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Monitor8/Tarball/op5-monitor-8.0.0.x64.tar.gz &>/dev/null && tar xvf *.gz &>/dev/null
+    cd /tmp && curl -O https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Monitor8/Tarball/op5-monitor-8.0.5-x64.tar.gz &>/dev/null && tar xvf *.gz &>/dev/null
     echo "[>>>] Whoosh! Download and unpack complete. Running non-interactive installation script. This will take some time."
     cd *onitor*/ && ./install.sh --noninteractive &>/dev/null
 else
