@@ -11,6 +11,7 @@ Vagrant.configure("2") do |config|
     centos6.vm.box = "centos/6"
     centos6.vm.hostname = %x(python diablo-name.py CO6).chomp
     centos6.vm.network "forwarded_port", guest: 443, host: 4436
+    centos6.vm.network "private_network", type: "dhcp"
     centos6.vm.provision "shell", path: "provision.sh"
   end
   
@@ -18,6 +19,7 @@ Vagrant.configure("2") do |config|
     centos7.vm.box = "centos/7"
     centos7.vm.hostname = %x(python diablo-name.py CO7).chomp
     centos7.vm.network "forwarded_port", guest: 443, host: 4437
+    centos7.vm.network "private_network", type: "dhcp"
     centos7.vm.provision "shell", path: "provision.sh"
   end
   
