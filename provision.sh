@@ -17,7 +17,16 @@ OP5URL='--quiet https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_arch
 echo "[>>>] In case you chose to wget a file, it will be downloaded now."
 # Uncomment a wget line if you want the version specified to replace 'latest':
 
+# wget $OP5URL/Monitor8/Tarball/op5-monitor-8.0.6-x64.tar.gz
+# wget $OP5URL/Monitor8/Tarball/op5-monitor-8.0.5-x64.tar.gz
+# wget $OP5URL/Monitor8/Tarball/op5-monitor-8.0.4-x64.tar.gz
+# wget $OP5URL/Monitor8/Tarball/op5-monitor-8.0.3-x64.tar.gz
+# wget $OP5URL/Monitor8/Tarball/op5-monitor-8.0.2-x64.tar.gz
+# wget $OP5URL/Monitor8/Tarball/op5-monitor-8.0.1-x64.tar.gz
+############## note: naming scheme changed >8.0.1 ##########
+
 # wget $OP5URL/Monitor8/Tarball/op5-monitor-8.0.0.x64.tar.gz
+
 # wget $OP5URL/op5-monitor-7.5.2.x64.tar.gz
 # wget $OP5URL/op5-monitor-7.5.1.x64.tar.gz
 # wget $OP5URL/op5-monitor-7.5.0.x64.tar.gz
