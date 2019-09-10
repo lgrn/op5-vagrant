@@ -62,7 +62,7 @@ if [ ! -f /vagrant/*onitor*gz ]; then
     echo "[>>$OP5VV] No monitor file in /vagrant -- you didn't place one, or didn't choose a specific version."
 	echo "[>>$OP5VV] Since there's no installation file, we're grabbing the latest Monitor 8 instead."
 
-    $LATEST_FILENAME='op5-monitor-8.0.6-x64.tar.gz'
+    LATEST_FILENAME='op5-monitor-8.0.6-x64.tar.gz'
 
     echo "[>>$OP5VV] Now grabbing and unpacking: $LATEST_FILENAME (default)"
     cd /tmp && curl -O https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Monitor8/Tarball/$LATEST_FILENAME &>/dev/null && tar xvf *.gz &>/dev/null
