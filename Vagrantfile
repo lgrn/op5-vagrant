@@ -24,3 +24,8 @@ Vagrant.configure("2") do |config|
   end
   
 end
+
+# Load user extras
+Dir.glob("Vagrantdir/*") do |f|
+  load f
+end

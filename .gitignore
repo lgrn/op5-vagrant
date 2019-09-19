@@ -1,3 +1,5 @@
 .vagrant/
 *.tar.gz
 *.lic*
+Vagrantdir/
+user_provision.sh
