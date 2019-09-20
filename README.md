@@ -48,3 +48,13 @@ Ports chosen for forwarding are related to the CentOS version to make them easie
 
 * 443 -> 4436 (CentOS 6)
 * 443 -> 4437 (CentOS 7)
+
+## Customisations
+
+### Vagrantdir
+
+The Vagrantfile is set up to load additional configuration from the directory `Vagrantdir`, if present. Each file in that directory will be loaded as a normal Vagrantfile. This allows you to configure more machines without editing the main Vagrantfile.
+
+### user\_provision.sh
+
+If you want your own provision script, it is suggested that you name it `user_provision.sh`. This is simply because this name is in the `.gitignore` file -- you still have to call the script from the Vagrantfile.
