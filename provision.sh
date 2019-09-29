@@ -39,7 +39,7 @@ echo $($TIMES) $PREFX "If you chose to curl a file, it will be downloaded now."
 # curl $OP5URL/OP5-Monitor-7.4.4-20180711.tar.gz
 # curl $OP5URL/op5-monitor-7.4.2-20180515.tar.gz
 # curl $OP5URL/op5-monitor-7.4.1-20180420.tar.gz
- curl $OP5URL/op5-monitor-7.4.0-20180320.tar.gz
+# curl $OP5URL/op5-monitor-7.4.0-20180320.tar.gz
 # curl $OP5URL/op5-monitor-7.3.21-20180226.tar.gz
 # curl $OP5URL/op5-monitor-7.3.20-20180124.tar.gz
 # curl $OP5URL/op5-monitor-7.3.20-20180124.tar.gz
