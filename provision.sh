@@ -17,6 +17,7 @@ echo $($TIMES) $PREFX "If you chose to curl a file, it will be downloaded now."
 
 # Uncomment a curl line if you want the version specified to replace 'latest':
 
+# curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.8-x64.tar.gz
 # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.7-x64.tar.gz
 # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.6-x64.tar.gz
 # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.5-x64.tar.gz
@@ -28,6 +29,7 @@ echo $($TIMES) $PREFX "If you chose to curl a file, it will be downloaded now."
 
 # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.0.x64.tar.gz
 
+# curl $OP5URL/op5-monitor-7.5.4.x64.tar.gz
 # curl $OP5URL/op5-monitor-7.5.3.x64.tar.gz
 # curl $OP5URL/op5-monitor-7.5.2.x64.tar.gz
 # curl $OP5URL/op5-monitor-7.5.1.x64.tar.gz
@@ -64,7 +66,7 @@ if [ ! -f /vagrant/*onitor*gz ]; then
     echo $($TIMES) $PREFX "You didn't choose a specific version to install, /vagrant is empty."
 	echo $($TIMES) $PREFX "Since there's no installation file, we're grabbing the latest Monitor 8 release."
 
-    LATEST_FILENAME='op5-monitor-8.0.7-x64.tar.gz'
+    LATEST_FILENAME='op5-monitor-8.0.8-x64.tar.gz'
 
     echo $($TIMES) $PREFX "Latest version is assumed to be: $LATEST_FILENAME (default)"
     cd /tmp && curl -O https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive/Monitor8/Tarball/$LATEST_FILENAME &>/dev/null && tar xvf *.gz &>/dev/null
