@@ -95,6 +95,18 @@ else
     cd *onitor*/ && ./install.sh --noninteractive &>/dev/null
 fi
 
+if ls /var/lib/yum/transaction-* 1> /dev/null 2>&1; then
+    # there seem to be unfinished transactions. it's unclear why this happens, but if there are,
+    # we should probably finish them before moving on.
+    echo $($TIMES) $PREFX "Unfinished transactions were found. Telling yum to finish them."
+    echo $($TIMES) $PREFX "Preserving yum log as /var/log/yum.log.gz first."
+    gzip -9 /var/log/yum.log
+    echo $($TIMES) $PREFX "Completing transaction."
+    yum-complete-transaction
+else
+    echo $($TIMES) $PREFX "No unfinished transactions, yum seems to be done."
+fi
+
 echo -e "\n\n"
 
 # Any .lic file in /vagrant ? If so, use it.
