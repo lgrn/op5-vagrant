@@ -20,7 +20,7 @@ No, because Docker does not spin up virtual machines. "Vagrant is a tool focused
 
 ### Some use cases
 
-* You want a clean install of a certain version of OP5 Monitor on a Centos 6/7 (or both) system/s quickly to test something out.
+* You want a clean install of a certain version of OP5 Monitor on a Centos 7 system quickly to test something out.
 * You want a pre-configured environment with a master and poller (not implemented yet)
 
 ## Components
@@ -39,14 +39,12 @@ This shell-script is loaded when initially deploying a machine. It will install 
 
 Clone this repo and run `vagrant up` for the OP5 installation you want:
 
-* `vagrant up centos6`
 * `vagrant up centos7`
 
 If you run `vagrant up` without specifying a machine, they will all be deployed.
 
 Ports chosen for forwarding are related to the CentOS version to make them easier to remember:
 
-* 443 -> 4436 (CentOS 6)
 * 443 -> 4437 (CentOS 7)
 
 ## Customisations
