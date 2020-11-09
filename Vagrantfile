@@ -8,6 +8,7 @@ Vagrant.configure("2") do |config|
   end
   config.vm.define "centos7" do |centos7|
     centos7.vm.box = "centos/7"
+    #to use this, compile namkaran.go for your platform and uncomment
     #centos7.vm.hostname = %x(./namkaran -d EL7).chomp
     centos7.vm.hostname = "localhost"
     centos7.vm.network "forwarded_port", guest: 443, host: 4437
