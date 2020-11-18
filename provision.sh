@@ -20,7 +20,7 @@ log()
 check_for_monitor_file()
 {
 fileexists="false"
-for filecheck in /vagrant/*onitor*gz 
+for filecheck in /vagrant/*onitor*gz
 do
     if [ -e "$filecheck" ]
     then
@@ -65,13 +65,13 @@ op5_monitor_archive/Monitor8/Tarball/op5-monitor-$monversion-x64.tar.gz"
 else
     log "-m wasn't provided, falling back to \
 legacy mode (latest or provided file)."
-    
+
     cd /vagrant || exit 1
-    
+
     OP5URL="-O \
 https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive"
     LATEST_FILENAME='/Monitor8/Tarball/op5-monitor-8.2.3-x64.tar.gz'
-    
+
     # Uncomment a curl line below to replace 'latest'.
     #
     # The way this works is that since it will place a file in the vagrantdir
@@ -96,7 +96,7 @@ https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive"
     # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.3-x64.tar.gz
     # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.2-x64.tar.gz
     # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.1-x64.tar.gz
-    
+
     ############## note: naming scheme changed >8.0.0 ##########
 
     # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.0.x64.tar.gz
@@ -198,8 +198,8 @@ if ((phpdebug == "true")); then
     phpize
     log "Configuring xdebug and running make + install."
     ./configure --enable-xdebug &>/dev/null && \
-    make &>/dev/null && make install &>/dev/null 
-    
+    make &>/dev/null && make install &>/dev/null
+
     if [[ -f /usr/lib64/php/modules/xdebug.so ]]
         then
         log "/usr/lib64/php/modules/xdebug.so present and accounted for."
@@ -237,12 +237,8 @@ EOF
     fi
 
     log "Done."
-    log "You probably want to add this machine to .ssh/config"
-    log "Hints:"
-    log "IdentityFile [vagrants private_key]"
-    log "For keys with passphrases (probably not Vagrant) you also want:"
-    log "ssh-add ~/.ssh/your_private_key"
-
+    log "Do this to add the machine to your ssh config (example):"
+    log "vagrant ssh-config centos7 >> ~/.ssh/config"
 fi
 
 echo "[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>]"
