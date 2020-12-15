@@ -67,6 +67,7 @@ op5_monitor_archive/Monitor8/Tarball/op5-monitor-$monversion-x64.tar.gz"
         log "Failed to find provided version: $monversion. Exiting."
         exit 1
     fi
+	
 else
     log "-m wasn't provided, falling back to legacy mode."
 
@@ -77,11 +78,13 @@ https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive"
     LATEST_FILENAME='/Monitor8/Tarball/op5-monitor-8.2.3-x64.tar.gz'
 
 check_for_monitor_file && echo $fileexists
+
 if ((fileexists == "true")); then
     block_curl='true'
 fi
 
 if [[ "$block_curl" != 'true' ]]; then
+	log "Will now curl file manually, if specified."
     # Uncomment a curl line below to replace 'latest'.
     #
     # The way this works is that since it will place a file in the vagrantdir
