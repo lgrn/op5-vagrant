@@ -25,7 +25,12 @@ do
     if [ -e "$filecheck" ]
     then
         fileexists="true"
+        log "Filecheck found:"
+        ls -alh /vagrant | grep -i monitor
         break
+    else
+        log "Filecheck failed:"
+        ls -alh /vagrant | grep -i monitor
     fi
 done
 }
@@ -57,14 +62,13 @@ op5_monitor_archive/Monitor8/Tarball/op5-monitor-$monversion-x64.tar.gz"
 
     if curl -O /dev/null --silent --head --fail "$monurl" &>/dev/null ; then
         log "Downloading $monversion as provided."
-        cd /vagrant && curl -O "$monurl" &>/dev/null
+        cd /vagrant && curl -O "$monurl" &>/dev/null && block_curl='true'
     else
         log "Failed to find provided version: $monversion. Exiting."
         exit 1
     fi
 else
-    log "-m wasn't provided, falling back to \
-legacy mode (latest or provided file)."
+    log "-m wasn't provided, falling back to legacy mode."
 
     cd /vagrant || exit 1
 
@@ -72,30 +76,17 @@ legacy mode (latest or provided file)."
 https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive"
     LATEST_FILENAME='/Monitor8/Tarball/op5-monitor-8.2.3-x64.tar.gz'
 
+check_for_monitor_file && echo $fileexists
+if ((fileexists == "true")); then
+    block_curl='true'
+fi
+
+if [[ "$block_curl" != 'true' ]]; then
     # Uncomment a curl line below to replace 'latest'.
     #
     # The way this works is that since it will place a file in the vagrantdir
     # before the checks below run, it will act just like if you had placed it
     # there manually: i.e. it detects a local file and uses that.
-
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.2.3-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.2.2-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.2.1-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.2.0-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.1.4-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.1.3-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.1.2-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.1.1-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.1.0-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.9-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.8-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.7-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.6-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.5-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.4-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.3-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.2-x64.tar.gz
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.1-x64.tar.gz
 
     ############## note: naming scheme changed >8.0.0 ##########
 
@@ -137,17 +128,17 @@ https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive"
     ### UNSUPPORTED VERSIONS ###
 
     # curl $OP5URL/op5-monitor-6.3.3-20140912.tar.gz
-
-    check_for_monitor_file
-    if ((fileexists == "false")); then
-    log "No Monitor file found, fixing that: downloading $LATEST_FILENAME."
-
-    cd /vagrant && curl $OP5URL$LATEST_FILENAME &>/dev/null
-    fi
 fi
 
-check_for_monitor_file
+    check_for_monitor_file && echo $fileexists
+    if ((fileexists == "false")); then
+        log "No Monitor file found, fixing that: downloading $LATEST_FILENAME."
+        cd /vagrant && curl $OP5URL$LATEST_FILENAME &>/dev/null
+    fi
 
+fi
+
+check_for_monitor_file && echo $fileexists
 if ((fileexists == "true")); then
     log "Unpacking the Monitor file."
     cd /vagrant && tar xvf *onitor*.gz &>/dev/null
