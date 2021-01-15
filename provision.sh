@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-PREFX="[v0.3]"
+PREFX="[v0.4]"
 
 usage()
 {
@@ -35,6 +35,12 @@ do
 done
 }
 
+# initialize flag variables to their defaults
+
+run='false'
+phpdebug='false'
+verbose='false'
+
 while getopts "rpvtm:" flag; do
   case ${flag} in
     r) run='true' ;;
@@ -56,93 +62,75 @@ timedatectl --adjust-system-clock > /dev/null
 
 log "TIP: If downloads are slow, place the tar.gz in your vagrantdir beforehand."
 
-if [[ -n $monversion ]]; then
-    monurl="https://d2ubxhm80y3bwr.cloudfront.net/Downloads/\
-op5_monitor_archive/Monitor8/Tarball/op5-monitor-$monversion-x64.tar.gz"
+OP5URL="https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive"
 
-    if curl -O /dev/null --silent --head --fail "$monurl" &>/dev/null ; then
-        log "Downloading $monversion as provided."
-        cd /vagrant && curl -O "$monurl" &>/dev/null && block_curl='true'
-    else
-        log "Failed to find provided version: $monversion. Exiting."
-        exit 1
-    fi
-	
+# Uncomment a curl line below to use that version.
+#
+# The way this works is that since it will place a file in the vagrantdir
+# before the checks below run, it will act just like if you had placed it
+# there manually: i.e. it detects a local file and uses that.
+
+# curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.0.x64.tar.gz
+
+# curl $OP5URL/op5-monitor-7.4.5-20180806.tar.gz
+# curl $OP5URL/op5-monitor-7.4.3-20180612.tar.gz
+# curl $OP5URL/OP5-Monitor-7.4.4-20180711.tar.gz
+# curl $OP5URL/op5-monitor-7.4.2-20180515.tar.gz
+# curl $OP5URL/op5-monitor-7.4.1-20180420.tar.gz
+# curl $OP5URL/op5-monitor-7.4.0-20180320.tar.gz
+# curl $OP5URL/op5-monitor-7.3.21-20180226.tar.gz
+# curl $OP5URL/op5-monitor-7.3.20-20180124.tar.gz
+# curl $OP5URL/op5-monitor-7.3.20-20180124.tar.gz
+# curl $OP5URL/op5-monitor-7.3.19-20171212.tar.gz
+# curl $OP5URL/op5-monitor-7.3.2-20161114.tar.gz
+# curl $OP5URL/op5-monitor-7.2.2-20160513.tar.gz
+# curl $OP5URL/op5-monitor-7.0.0-20140903.tar.gz
+
+# curl $OP5URL/op5-monitor-6.3.3-20140912.tar.gz
+
+# If a version is missing above, the filename may be available from:
+# https://resources.itrsgroup.com/downloads
+# or, maybe it actually works with the -m flag!
+
+check_for_monitor_file
+
+if [[ $fileexists == "true" ]]; then
+        log "There's already a monitor file here. Using that."
 else
-    log "-m wasn't provided, falling back to legacy mode."
+	# Figure out what the major version is, then use an URL accordingly
+	major_version="$(echo $monversion | head -c 1)"
 
-    cd /vagrant || exit 1
+	[[ -z "$major_version" ]] && { log "Could not figure out major version (7/8)."; exit 1; }
 
-    OP5URL="-O \
-https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive"
-    LATEST_FILENAME='/Monitor8/Tarball/op5-monitor-8.2.3-x64.tar.gz'
+	if [[ $major_version == "7" ]]; then
+		monurl="https://d2ubxhm80y3bwr.cloudfront.net/Downloads/\
+	op5_monitor_archive/op5-monitor-$monversion.x64.tar.gz"
 
-check_for_monitor_file && echo $fileexists
+		if curl -O /dev/null --silent --head --fail "$monurl" &>/dev/null ; then
+			log "Downloading $monversion as provided in Vagrantfile."
+			cd /vagrant && curl -O "$monurl" &>/dev/null 
+		else
+			log "Failed to find provided version: $monversion. Exiting."
+			exit 1
+		fi
+	elif [[ $major_version == "8" ]]; then
+		monurl="https://d2ubxhm80y3bwr.cloudfront.net/Downloads/\
+	op5_monitor_archive/Monitor8/Tarball/op5-monitor-$monversion-x64.tar.gz"
 
-if ((fileexists == "true")); then
-    block_curl='true'
+		if curl -O /dev/null --silent --head --fail "$monurl" &>/dev/null ; then
+			log "Downloading $monversion as provided in Vagrantfile."
+			cd /vagrant && curl -O "$monurl" &>/dev/null 
+		else
+			log "Failed to find provided version: $monversion. Exiting."
+			exit 1
+		fi
+	
+	fi
 fi
 
-if [[ "$block_curl" != 'true' ]]; then
-	log "Will now curl file manually, if specified."
-    # Uncomment a curl line below to replace 'latest'.
-    #
-    # The way this works is that since it will place a file in the vagrantdir
-    # before the checks below run, it will act just like if you had placed it
-    # there manually: i.e. it detects a local file and uses that.
+check_for_monitor_file
 
-    ############## note: naming scheme changed >8.0.0 ##########
-
-    # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.0.x64.tar.gz
-
-    # curl $OP5URL/op5-monitor-7.5.13.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.5.12.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.5.11.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.5.10.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.5.9.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.5.8.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.5.7.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.5.6.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.5.5.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.5.4.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.5.3.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.5.2.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.5.1.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.5.0.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.4.11.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.4.6.x64.tar.gz
-    # curl $OP5URL/op5-monitor-7.4.5-20180806.tar.gz
-    # curl $OP5URL/op5-monitor-7.4.3-20180612.tar.gz
-    # curl $OP5URL/OP5-Monitor-7.4.4-20180711.tar.gz
-    # curl $OP5URL/op5-monitor-7.4.2-20180515.tar.gz
-    # curl $OP5URL/op5-monitor-7.4.1-20180420.tar.gz
-    # curl $OP5URL/op5-monitor-7.4.0-20180320.tar.gz
-    # curl $OP5URL/op5-monitor-7.3.21-20180226.tar.gz
-    # curl $OP5URL/op5-monitor-7.3.20-20180124.tar.gz
-    # curl $OP5URL/op5-monitor-7.3.20-20180124.tar.gz
-    # curl $OP5URL/op5-monitor-7.3.19-20171212.tar.gz
-    # curl $OP5URL/op5-monitor-7.3.2-20161114.tar.gz
-    # curl $OP5URL/op5-monitor-7.2.2-20160513.tar.gz
-    # curl $OP5URL/op5-monitor-7.0.0-20140903.tar.gz
-
-    # If a version is missing above, the filename may be available from:
-    # https://resources.itrsgroup.com/downloads
-
-    ### UNSUPPORTED VERSIONS ###
-
-    # curl $OP5URL/op5-monitor-6.3.3-20140912.tar.gz
-fi
-
-    check_for_monitor_file && echo $fileexists
-    if ((fileexists == "false")); then
-        log "No Monitor file found, fixing that: downloading $LATEST_FILENAME."
-        cd /vagrant && curl $OP5URL$LATEST_FILENAME &>/dev/null
-    fi
-
-fi
-
-check_for_monitor_file && echo $fileexists
-if ((fileexists == "true")); then
+if [[ $fileexists == "true" ]]; then
     log "Unpacking the Monitor file."
     cd /vagrant && tar xvf *onitor*.gz &>/dev/null
     log "Executing non-interactive \
@@ -150,7 +138,7 @@ OP5 installation. This will take some time (~10min)."
     cd *onitor* && ./install.sh --noninteractive &>/dev/null
     log "Installation process finished."
 else
-    log "No monitor file found! Exiting."
+    log "No monitor file found! Try the -m flag. Exiting."
     exit 1
 fi
 
@@ -177,7 +165,7 @@ fi
 log "Time remaining for your OP5 license (check_op5_license):"
 log "$(/opt/plugins/check_op5_license -w1 -c1 -T d)"
 
-if ((phpdebug == "true")); then
+if [[ $phpdebug == "true" ]]; then
 
     log "PHP debug tools will now be installed, as requested."
     yum install php-devel -y &>/dev/null
@@ -203,7 +191,7 @@ if ((phpdebug == "true")); then
 
     log "Amending config block to end of php.ini (idekey = VSCODE)"
 
-cat >> /etc/php.ini <<EOF
+cat >> /etc/php.ini << EOF
 zend_extension="/usr/lib64/php/modules/xdebug.so"
 xdebug.remote_enable = 1
 xdebug.remote_autostart = 1
@@ -213,7 +201,7 @@ EOF
 
     log "Setting up a file at monitor/phpinfo.php for your convenience."
 
-cat >> /opt/monitor/op5/ninja/phpinfo.php <<EOF
+cat >> /opt/monitor/op5/ninja/phpinfo.php << EOF
 <?php
 phpinfo();
 ?>
@@ -233,6 +221,9 @@ EOF
     log "Done."
     log "Do this to add the machine to your ssh config (example):"
     log "vagrant ssh-config centos7 >> ~/.ssh/config"
+
+else
+	log "Skipping PHP debug tools."
 fi
 
 echo "[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>]"

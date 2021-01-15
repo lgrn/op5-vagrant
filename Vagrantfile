@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
     centos7.vm.hostname = "localhost"
     centos7.vm.network "forwarded_port", guest: 443, host: 4437
     centos7.vm.network "private_network", type: "dhcp"
-    centos7.vm.provision "shell", path: "provision.sh", :args => "-r -v -m 8.2.4"
+    centos7.vm.provision "shell", path: "provision.sh", :args => "-r -v -m 8.2.5"
   end
 end
 
