@@ -226,6 +226,10 @@ else
 	log "Skipping PHP debug tools."
 fi
 
+log "Adding potentially helpful DNS entries"
+echo "172.16.150.65 ci-master.dev.itrsent.local" >> /etc/hosts
+echo "172.16.20.69 repos.dev.itrsent.local" >> /etc/hosts
+
 echo "[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>]"
 echo "[>>>>>>>>>>>>>>>>>>>>>>>>> F I N I S H E D >>>>>>>>>>>>>>>>>>>>>>>>>>>>>]"
 echo "[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>]"
