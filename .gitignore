@@ -3,3 +3,4 @@
 *.lic*
 Vagrantdir/
 user_provision.sh
+secret.sh

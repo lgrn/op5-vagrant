@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-PREFX="[v0.4]"
+PREFX="[v0.5]"
+source /vagrant/secret.sh
 
 usage()
 {
@@ -7,8 +8,7 @@ usage()
     echo "  -r : Run the script."
     echo "  -p : Install libraries necessary for PHP debugging."
     echo "  -v : Provide verbose output, script is quite silent by default."
-    echo "  -m : Supply a Monitor version to download, \
-example: '8.2.3' (8+ only!)"
+    echo "  -m : Supply a Monitor version to download, example: '8.2.3'"
 }
 
 log()
@@ -35,6 +35,18 @@ do
 done
 }
 
+register_rhel_system()
+{
+    log "Registering system with Red Hat. Please wait."
+    subscription-manager register --username $RHEL_USER --password $RHEL_PASS --auto-attach &>/dev/null
+    log "Enabling optional RHEL RPMs."
+    subscription-manager repos --enable=rhel-7-server-optional-rpms &>/dev/null
+    log "Verifying that the system is correctly registered:"
+    subscription-manager status 
+    log "You can un-register this system from the web console, or by using this command:"
+    log "# subscription-manager unregister"
+}
+
 # initialize flag variables to their defaults
 
 run='false'
@@ -53,14 +65,21 @@ done
 
 [[ "$run" != "true" ]] && { usage; log "Missing -r flag."; exit 1; }
 
+rhelver="$(head -n1 /etc/redhat-release | tr '[:upper:]' '[:lower:]')"
+
+if [[ $rhelver =~ "red hat" ]] && [[ -n $RHEL_USER ]] && [[ -n $RHEL_PASS ]]; then
+    register_rhel_system
+else
+    log "This isn't Red Hat, or secret.sh isn't configured. Skipping."
+    log "Got version: '$rhelver'"
+fi
+
 log "Setting default timezone (Europe/Stockholm)."
 timedatectl set-timezone Europe/Stockholm &>/dev/null
 ln -fs /usr/share/zoneinfo/Europe/Stockholm /etc/localtime
 
 log "Adjusting system clock."
 timedatectl --adjust-system-clock > /dev/null
-
-log "TIP: If downloads are slow, place the tar.gz in your vagrantdir beforehand."
 
 OP5URL="https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive"
 
@@ -90,7 +109,7 @@ OP5URL="https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive"
 
 # If a version is missing above, the filename may be available from:
 # https://resources.itrsgroup.com/downloads
-# or, maybe it actually works with the -m flag!
+# or, maybe it actually works with the -m flag (pretty likely)!
 
 check_for_monitor_file
 
@@ -132,10 +151,10 @@ check_for_monitor_file
 
 if [[ $fileexists == "true" ]]; then
     log "Unpacking the Monitor file."
-    cd /vagrant && tar xvf *onitor*.gz &>/dev/null
+    cd /vagrant && tar xvf *onitor*.gz -C /tmp &>/dev/null
     log "Executing non-interactive \
 OP5 installation. This will take some time (~10min)."
-    cd *onitor* && ./install.sh --noninteractive &>/dev/null
+    cd /tmp/*onitor* && ./install.sh --noninteractive &>/dev/null
     log "Installation process finished."
 else
     log "No monitor file found! Try the -m flag. Exiting."
@@ -187,6 +206,7 @@ if [[ $phpdebug == "true" ]]; then
         log "/usr/lib64/php/modules/xdebug.so present and accounted for."
     else
         log "xdebug.so is not in /usr/lib64/php/modules/ !!!"
+        log "PHP debugging likely will not work, continuing anyway."
     fi
 
     log "Amending config block to end of php.ini (idekey = VSCODE)"
