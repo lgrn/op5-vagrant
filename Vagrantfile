@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
     centos7.vm.hostname = "localhost"
     centos7.vm.network "forwarded_port", guest: 443, host: 4437
     centos7.vm.network "private_network", type: "dhcp"
-    centos7.vm.provision "shell", path: "provision.sh", :args => "-r -v -m 8.2.5"
+    centos7.vm.provision "shell", path: "provision.sh", :args => "-r -v -m 8.2.6"
   end
   config.vm.define "rhel7" do |rhel7|
     rhel7.vm.box = "generic/rhel7"
@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
     rhel7.vm.hostname = "localhost"
     rhel7.vm.network "forwarded_port", guest: 443, host: 44377
     rhel7.vm.network "private_network", type: "dhcp"
-    rhel7.vm.provision "shell", path: "provision.sh", :args => "-r -v -m 8.2.5"
+    rhel7.vm.provision "shell", path: "provision.sh", :args => "-r -v -m 8.2.6"
   end
 end
 
