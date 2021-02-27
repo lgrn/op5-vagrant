@@ -76,19 +76,25 @@ Usage: provision.sh <-r|-p|-v|-t|-m>"
 
 These flags only affect the Monitor installation. To choose between CentOS/RHEL, different boxes are provided (see below).
 ### Boxes available
-* `vagrant up centos7`, or:
-* `vagrant up rhel7`
+
+#### Virtualbox
+* `vagrant up vc7`, or:
+* `vagrant up vr7`
+
+#### libvirt
+* `vagrant up lc7`, or:
+* `vagrant up lr7`
 
 When selecting `rhel7`, you must provide a RH username and password in `secret.sh`. Rename and fill out `secret.sh_example`.
 
-If you run `vagrant up` without specifying a machine, they will all be deployed.
+If you run `vagrant up` without specifying a machine, they will all be deployed. That's not a good idea, since they conflict.
 
 Ports chosen for forwarding:
 
 * 443 -> 4437 (CentOS 7)
 * 443 -> 44377 (RHEL 7)
 
-They differ to ensure the possibility of running both at the same time.
+They differ to ensure the possibility of running both CentOS and RHEL at the same time.
 
 ## Customizations
 
