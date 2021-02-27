@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 PREFX="[v0.5]"
+if [[ -f /vagrant/op5license.lic ]] ; then
 source /vagrant/secret.sh
+log "secret.sh found and loaded."
+fi
 
 usage()
 {
@@ -70,10 +73,12 @@ rhelver="$(head -n1 /etc/redhat-release | tr '[:upper:]' '[:lower:]')"
 if [[ $rhelver =~ "red hat" ]] && [[ -n $RHEL_USER ]] && [[ -n $RHEL_PASS ]]; then
     register_rhel_system
 else
-    log "This isn't Red Hat, or secret.sh isn't configured. Skipping."
     log "Got version: '$rhelver'"
 fi
 
+# in the unlikely event that you don't live in Sweden, you may want
+# to change this. I'll make it a flag at some point (or maybe you
+# will with a pull request)
 log "Setting default timezone (Europe/Stockholm)."
 timedatectl set-timezone Europe/Stockholm &>/dev/null
 ln -fs /usr/share/zoneinfo/Europe/Stockholm /etc/localtime
@@ -88,6 +93,8 @@ OP5URL="https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive"
 # The way this works is that since it will place a file in the vagrantdir
 # before the checks below run, it will act just like if you had placed it
 # there manually: i.e. it detects a local file and uses that.
+
+# NOTE: This is only necessary for older versions. You probably want flag -m
 
 # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.0.x64.tar.gz
 

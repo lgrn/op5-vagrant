@@ -8,7 +8,30 @@ While this Vagrant setup makes use of OP5 Monitor, any code in this repository i
 
 ## Requirements
 
-You need a working Vagrant installation, and a working provider. This configuration assumes Virtualbox.
+You need a working Vagrant installation, and a working provider. This configuration assumes Virtualbox or libvirt.
+
+### Using libvirt
+
+NOTE: Ports are identical, so running Virtualbox and libvirt as providers simultaneously will not work with reconfiguration.
+
+Install libvirt stuff. Debian/Ubuntu example:
+
+```
+$ sudo apt install qemu qemu-kvm virtinst libvirt-daemon-system libvirt-clients libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev ruby-libvirt ebtables dnsmasq-base bridge-utils
+```
+
+Verify that the service is running:
+```
+$ sudo systemctl status libvirtd
+``` 
+
+Add yourself to `libvirt`, then `su` to avoid having to re-login:
+
+``` 
+$ sudo usermod -aG libvirt $(whoami)
+$ su - $(whoami)
+$ groups
+```
 
 ## Why
 
