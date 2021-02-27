@@ -33,6 +33,13 @@ $ su - $(whoami)
 $ groups
 ```
 
+When `libvirt` is available, you need the following two vagrant plugins:
+
+``` 
+$ vagrant plugin install vagrant-libvirt
+$ vagrant plugin install vagrant-mutate
+```
+
 ## Why
 
 ### What is Vagrant?
