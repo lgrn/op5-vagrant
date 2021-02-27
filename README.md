@@ -40,6 +40,8 @@ $ vagrant plugin install vagrant-libvirt
 $ vagrant plugin install vagrant-mutate
 ```
 
+If you're on a really cool Linux distribution where packages are too new and dependency resolutions bugs out, installing these plugins may require you to set `VAGRANT_DISABLE_STRICT_DEPENDENCY_ENFORCEMENT=1`.
+
 ## Why
 
 ### What is Vagrant?

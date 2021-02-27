@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 PREFX="[v0.5.1]"
-if [[ -f /vagrant/op5license.lic ]] ; then
+if [[ -f /vagrant/secret.sh ]] ; then
 source /vagrant/secret.sh
 log "secret.sh found and loaded."
 fi
