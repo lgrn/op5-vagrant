@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
-PREFX="[v0.5.1]"
+PREFX="[v0.5.2]"
 if [[ -f /vagrant/secret.sh ]] ; then
 source /vagrant/secret.sh
-log "secret.sh found and loaded."
 fi
+
+### START OF FUNCTIONS
 
 usage()
 {
-    echo "Usage: provision.sh <-r|-p|-v|-t|-m>"
+    echo "Usage: provision.sh <-r|-p|-v|-t|-m|-n>"
     echo "  -r : Run the script."
     echo "  -p : Install libraries necessary for PHP debugging."
     echo "  -v : Provide verbose output, script is quite silent by default."
     echo "  -m : Supply a Monitor version to download, example: '8.2.3'"
+    echo "  -n : [INTERNAL] Install The New UI(tm)"
 }
 
 log()
@@ -50,21 +52,113 @@ register_rhel_system()
     log "# subscription-manager unregister"
 }
 
+install_php_debug_tools()
+{
+
+    log "PHP debug tools will now be installed, as requested."
+    yum install php-devel -y &>/dev/null
+    log "php-devel installed via yum."
+    log "Installing group 'Development Tools' via yum (be patient)."
+    yum groupinstall "Development Tools" -y &>/dev/null
+    log "Development tools have been installed. Starting xdebug download."
+    cd /tmp && curl -O https://xdebug.org/files/xdebug-2.4.1.tgz &>/dev/null
+    log "xdebug downloaded."
+    tar xvf xdebug-2.4.1.tgz &>/dev/null && cd xdebug* || exit 1
+    log "Running phpize."
+    phpize
+    log "Configuring xdebug and running make + install."
+    ./configure --enable-xdebug &>/dev/null && \
+    make &>/dev/null && make install &>/dev/null
+
+    if [[ -f /usr/lib64/php/modules/xdebug.so ]]
+        then
+        log "/usr/lib64/php/modules/xdebug.so present and accounted for."
+    else
+        log "xdebug.so is not in /usr/lib64/php/modules/ !!!"
+        log "PHP debugging likely will not work, continuing anyway."
+    fi
+
+    log "Amending config block to end of php.ini (idekey = VSCODE)"
+
+cat >> /etc/php.ini << EOF
+zend_extension="/usr/lib64/php/modules/xdebug.so"
+xdebug.remote_enable = 1
+xdebug.remote_autostart = 1
+xdebug.remote_port = 9000
+xdebug.idekey = VSCODE
+EOF
+
+    log "Setting up a file at monitor/phpinfo.php for your convenience."
+
+cat >> /opt/monitor/op5/ninja/phpinfo.php << EOF
+<?php
+phpinfo();
+?>
+EOF
+
+    log "Trying to copy vagrants authorized_keys to root. Use:"
+    log ".vagrant/machines/centos7/virtualbox/private_key to SSH in as root."
+
+    if [[ -f /home/vagrant/.ssh/authorized_keys ]]
+        then
+        cd /home/vagrant/.ssh/
+        mkdir -p /root/.ssh && cp -fv authorized_keys /root/.ssh
+    else
+        log "Oh no! There's no authorized_keys to copy :("
+    fi
+
+    log "Done."
+    log "Do this to add the machine to your ssh config (example):"
+    log "vagrant ssh-config centos7 >> ~/.ssh/config"
+
+}
+
+install_new_ui()
+{
+log "Initializing new UI install"
+cat >> /etc/yum.repos.d/op5-release-head.repo << EOF
+##### op5 Monitor
+[op5-monitor-updates-head]
+name=op5 Monitor Updates head
+baseurl=http://repos.dev.itrsent.local/head/el\$releasever/\$basearch/monitor/master/updates/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-op5
+EOF
+
+yum install -y yum-utils && yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo \
+&& yum install docker-ce docker-ce-cli containerd.io && systemctl enable docker --now
+
+yum clean all && yum update -y && yum install -y monitor-web-platform
+
+echo '{"insecure-registries": ["docker.dev.itrsent.local"]}"' >> /etc/docker/daemon.json
+systemctl restart docker && systemctl restart monitor-web-platform
+}
+
+## END OF FUNCTIONS
+
 # initialize flag variables to their defaults
 
 run='false'
 phpdebug='false'
 verbose='false'
+newui='false'
 
-while getopts "rpvtm:" flag; do
+while getopts "rpvtmn:" flag; do
   case ${flag} in
     r) run='true' ;;
     p) phpdebug='true' ;;
     v) verbose='true' ;;
+    n) newui='true' ;;
     m) monversion=$OPTARG ;;
     *) error "Unexpected option." ;;
   esac
 done
+
+log "Adding potentially helpful DNS entries"
+echo "172.16.150.65 ci-master.dev.itrsent.local" >> /etc/hosts
+echo "172.16.20.69 repos.dev.itrsent.local" >> /etc/hosts
+echo "172.16.20.221 docker.dev.itrsent.local" >> /etc/hosts
 
 [[ "$run" != "true" ]] && { usage; log "Missing -r flag."; exit 1; }
 
@@ -73,12 +167,10 @@ rhelver="$(head -n1 /etc/redhat-release | tr '[:upper:]' '[:lower:]')"
 if [[ $rhelver =~ "red hat" ]] && [[ -n $RHEL_USER ]] && [[ -n $RHEL_PASS ]]; then
     register_rhel_system
 else
+    log "This isn't Red Hat, or secret.sh isn't configured. Skipping."
     log "Got version: '$rhelver'"
 fi
 
-# in the unlikely event that you don't live in Sweden, you may want
-# to change this. I'll make it a flag at some point (or maybe you
-# will with a pull request)
 log "Setting default timezone (Europe/Stockholm)."
 timedatectl set-timezone Europe/Stockholm &>/dev/null
 ln -fs /usr/share/zoneinfo/Europe/Stockholm /etc/localtime
@@ -93,8 +185,6 @@ OP5URL="https://d2ubxhm80y3bwr.cloudfront.net/Downloads/op5_monitor_archive"
 # The way this works is that since it will place a file in the vagrantdir
 # before the checks below run, it will act just like if you had placed it
 # there manually: i.e. it detects a local file and uses that.
-
-# NOTE: This is only necessary for older versions. You probably want flag -m
 
 # curl $OP5URL/Monitor8/Tarball/op5-monitor-8.0.0.x64.tar.gz
 
@@ -192,70 +282,16 @@ log "Time remaining for your OP5 license (check_op5_license):"
 log "$(/opt/plugins/check_op5_license -w1 -c1 -T d)"
 
 if [[ $phpdebug == "true" ]]; then
-
-    log "PHP debug tools will now be installed, as requested."
-    yum install php-devel -y &>/dev/null
-    log "php-devel installed via yum."
-    log "Installing group 'Development Tools' via yum (be patient)."
-    yum groupinstall "Development Tools" -y &>/dev/null
-    log "Development tools have been installed. Starting xdebug download."
-    cd /tmp && curl -O https://xdebug.org/files/xdebug-2.4.1.tgz &>/dev/null
-    log "xdebug downloaded."
-    tar xvf xdebug-2.4.1.tgz &>/dev/null && cd xdebug* || exit 1
-    log "Running phpize."
-    phpize
-    log "Configuring xdebug and running make + install."
-    ./configure --enable-xdebug &>/dev/null && \
-    make &>/dev/null && make install &>/dev/null
-
-    if [[ -f /usr/lib64/php/modules/xdebug.so ]]
-        then
-        log "/usr/lib64/php/modules/xdebug.so present and accounted for."
-    else
-        log "xdebug.so is not in /usr/lib64/php/modules/ !!!"
-        log "PHP debugging likely will not work, continuing anyway."
-    fi
-
-    log "Amending config block to end of php.ini (idekey = VSCODE)"
-
-cat >> /etc/php.ini << EOF
-zend_extension="/usr/lib64/php/modules/xdebug.so"
-xdebug.remote_enable = 1
-xdebug.remote_autostart = 1
-xdebug.remote_port = 9000
-xdebug.idekey = VSCODE
-EOF
-
-    log "Setting up a file at monitor/phpinfo.php for your convenience."
-
-cat >> /opt/monitor/op5/ninja/phpinfo.php << EOF
-<?php
-phpinfo();
-?>
-EOF
-
-    log "Trying to copy vagrants authorized_keys to root. Use:"
-    log ".vagrant/machines/centos7/virtualbox/private_key to SSH in as root."
-
-    if [[ -f /home/vagrant/.ssh/authorized_keys ]]
-        then
-        cd /home/vagrant/.ssh/
-        mkdir -p /root/.ssh && cp -fv authorized_keys /root/.ssh
-    else
-        log "Oh no! There's no authorized_keys to copy :("
-    fi
-
-    log "Done."
-    log "Do this to add the machine to your ssh config (example):"
-    log "vagrant ssh-config centos7 >> ~/.ssh/config"
-
+    install_php_debug_tools
 else
 	log "Skipping PHP debug tools."
 fi
 
-log "Adding potentially helpful DNS entries"
-echo "172.16.150.65 ci-master.dev.itrsent.local" >> /etc/hosts
-echo "172.16.20.69 repos.dev.itrsent.local" >> /etc/hosts
+if [[ $newui == "true" ]]; then
+    install_new_ui
+else
+    log "Skipping new UI."
+fi
 
 echo "[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>]"
 echo "[>>>>>>>>>>>>>>>>>>>>>>>>> F I N I S H E D >>>>>>>>>>>>>>>>>>>>>>>>>>>>>]"
