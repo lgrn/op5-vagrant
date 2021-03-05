@@ -105,6 +105,36 @@ Ports chosen for forwarding:
 
 They differ to ensure the possibility of running both CentOS and RHEL at the same time.
 
+Note that you should check your `Vagrantfile` for these values as this documentation may be out of date.
+
+### Create your own box
+
+If you want to re-use a box after installation to speed things up, you first need to re-add the insecure Vagrant key. From inside the VM, run:
+
+```
+$ echo "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key" >> /home/vagrant/.ssh/authorized_keys
+```
+
+You can now create your own box. Example:
+
+```
+$ vagrant package lc7                     # created as package.box
+$ vagrant box add package.box --name op5  # then use box "op5":
+```
+
+Now set up a new VM in your `Vagrantfile` like `lc72.vm.box = "op5"`. No other attributes are necessary:
+
+```
+config.vm.define "lc72" do |lc72|
+  lc72.vm.box = "op5"
+end
+config.vm.define "lc73" do |lc73|
+  lc73.vm.box = "op5"
+end
+
+# etc...
+```
+
 ## Customizations
 
 ### Vagrantdir

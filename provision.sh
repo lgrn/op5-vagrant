@@ -47,7 +47,7 @@ register_rhel_system()
     log "Enabling optional RHEL RPMs."
     subscription-manager repos --enable=rhel-7-server-optional-rpms &>/dev/null
     log "Verifying that the system is correctly registered:"
-    subscription-manager status 
+    subscription-manager status
     log "You can un-register this system from the web console, or by using this command:"
     log "# subscription-manager unregister"
 }
@@ -144,7 +144,7 @@ phpdebug='false'
 verbose='false'
 newui='false'
 
-while getopts "rpvtmn:" flag; do
+while getopts "rpvtnm:" flag; do
   case ${flag} in
     r) run='true' ;;
     p) phpdebug='true' ;;
@@ -216,7 +216,7 @@ else
 	# Figure out what the major version is, then use an URL accordingly
 	major_version="$(echo $monversion | head -c 1)"
 
-	[[ -z "$major_version" ]] && { log "Could not figure out major version (7/8)."; exit 1; }
+	[[ -z "$major_version" ]] && { log "Could not figure out what to make of arg '$monversion'/'$major_version' (7/8)."; exit 1; }
 
 	if [[ $major_version == "7" ]]; then
 		monurl="https://d2ubxhm80y3bwr.cloudfront.net/Downloads/\
@@ -224,7 +224,7 @@ else
 
 		if curl -O /dev/null --silent --head --fail "$monurl" &>/dev/null ; then
 			log "Downloading $monversion as provided in Vagrantfile."
-			cd /vagrant && curl -O "$monurl" &>/dev/null 
+			cd /vagrant && curl -O "$monurl" &>/dev/null
 		else
 			log "Failed to find provided version: $monversion. Exiting."
 			exit 1
@@ -235,12 +235,12 @@ else
 
 		if curl -O /dev/null --silent --head --fail "$monurl" &>/dev/null ; then
 			log "Downloading $monversion as provided in Vagrantfile."
-			cd /vagrant && curl -O "$monurl" &>/dev/null 
+			cd /vagrant && curl -O "$monurl" &>/dev/null
 		else
 			log "Failed to find provided version: $monversion. Exiting."
 			exit 1
 		fi
-	
+
 	fi
 fi
 
