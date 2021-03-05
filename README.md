@@ -48,68 +48,47 @@ If you're on a really cool Linux distribution where packages are too new and dep
 
 Vagrant is a tool for building and managing virtual machine environments in a single workflow.
 
-### Is Vagrant Docker?
-
-No, because Docker does not spin up virtual machines. "Vagrant is a tool focused on providing a consistent development environment workflow across multiple operation systems. Docker is a container management that can consistently run software as long as a containerization system exists."
-
-### Some use cases
-
-* You want a clean install of a certain version of OP5 Monitor on a Centos/RHEL 7 system quickly to test something out.
-* You want a pre-configured environment with a master and poller (not implemented yet)
-
 ## Components
 
 ### Vagrantfile
 
 "The primary function of the Vagrantfile is to describe the type of machine required for a project, and how to configure and provision these machines."
 
+This is where you define your machines, forward ports, set hostnames and more.
+
 For more information, see: https://www.vagrantup.com/docs/vagrantfile/
 
 ### provision.sh
 
-This shell-script is loaded when initially deploying a machine. It will install Monitor from the working directory, or from the Internet, and install it.
+This shell-script is loaded when initially deploying a machine. Run it without any flags for usage information. Note that the flags probably need to be in the correct order.
 
 ## Example use
 
-tl;dr Clone this repo and run `vagrant up` for the OP5 installation you want.
+tl;dr Clone this repo and run `vagrant up` for the OP5 installation you want. You need a working provider, like Virtualbox or libvirt on Linux.
 
-You may want to inspect the `Vagrantfile` first and take note of the flags available for `provision.sh`. You can also list them by running the script without any flags:
+You may want to inspect the `Vagrantfile` first and take note of the flags available for `provision.sh`. You can also list them by running the script without any flags.
 
-```
-Usage: provision.sh <-r|-p|-v|-t|-m>"
-  -r : Run the script."
-  -p : Install libraries necessary for PHP debugging."
-  -v : Provide verbose output, script is quite silent by default."
-  -m : Supply a Monitor version to download, example: '8.2.3'"
-```
+These flags only affect the Monitor installation process, for example if you want PHP debugging tools installed. To choose between CentOS/RHEL, different boxes are provided.
 
-These flags only affect the Monitor installation. To choose between CentOS/RHEL, different boxes are provided (see below).
 ### Boxes available
 
-#### Virtualbox
+#### Virtualbox (v)
 * `vagrant up vc7`, or:
 * `vagrant up vr7`
 
-#### libvirt
+#### libvirt (l)
 * `vagrant up lc7`, or:
 * `vagrant up lr7`
 
-When selecting `rhel7`, you must provide a RH username and password in `secret.sh`. Rename and fill out `secret.sh_example`.
+When selecting RHEL (r), you must provide a RH username and password in `secret.sh`. The system will then be registered for you automatically. Rename and fill out `secret.sh_example`.
 
 If you run `vagrant up` without specifying a machine, they will all be deployed. That's not a good idea, since they conflict.
 
-Ports chosen for forwarding:
-
-* 443 -> 4437 (CentOS 7)
-* 443 -> 44377 (RHEL 7)
-
-They differ to ensure the possibility of running both CentOS and RHEL at the same time.
-
-Note that you should check your `Vagrantfile` for these values as this documentation may be out of date.
+Note that you should always check your `Vagrantfile` for values like ports as this documentation may be out of date.
 
 ### Create your own box
 
-If you want to re-use a box after installation to speed things up, you first need to re-add the insecure Vagrant key. From inside the VM, run:
+If you want to re-use a box after the initial installation to speed things up, you first need to re-add the insecure Vagrant key. From inside the VM, run:
 
 ```
 $ echo "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key" >> /home/vagrant/.ssh/authorized_keys
@@ -122,24 +101,28 @@ $ vagrant package lc7                     # created as package.box
 $ vagrant box add package.box --name op5  # then use box "op5":
 ```
 
-Now set up a new VM in your `Vagrantfile` like `lc72.vm.box = "op5"`. No other attributes are necessary:
+Now set up a new VM in your `Vagrantfile` like `lc72.vm.box = "op5"`. No other attributes are necessary but you probably wants hostnames:
 
 ```
 config.vm.define "lc72" do |lc72|
+  lc72.vm.hostname = "lc72"
   lc72.vm.box = "op5"
 end
 config.vm.define "lc73" do |lc73|
+  lc73.vm.hostname = "lc73"
   lc73.vm.box = "op5"
 end
 
 # etc...
 ```
 
+In practice this allows you to just run the provisioning once, and then deploy N amount of identical VMs. Vagrant will make sure they have different IP addresses, and communication in between them should work without any additional configuration.
+
 ## Customizations
 
 ### Vagrantdir
 
-The Vagrantfile is set up to load additional configuration from the directory `Vagrantdir`, if present. Each file in that directory will be loaded as a normal Vagrantfile. This allows you to configure more machines without editing the main Vagrantfile.
+The Vagrantfile is set up to load additional configuration from the directory `Vagrantdir`, if present. Each file in that directory will be loaded as a normal Vagrantfile. This allows you to configure more machines without editing the main Vagrantfile, and it also ensures it's not overwritten by this repo.
 
 ### user\_provision.sh
 
