@@ -94,12 +94,28 @@ If you want to re-use a box after the initial installation to speed things up, y
 $ echo "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key" >> /home/vagrant/.ssh/authorized_keys
 ```
 
+For some reason, with libvirt the kernel needs to be readable before creating a box:
+
+```
+sudo chmod +r /boot/vmlinuz-*
+```
+
 You can now create your own box. Example:
 
 ```
 $ vagrant package lc7                     # created as package.box
-$ vagrant box add package.box --name op5  # then use box "op5":
+$ vagrant box add package.box --name op5  # import package.box as "op5"
+
+expect:
+==> box: Successfully added box 'op5' (v0) for 'libvirt'!
+
+$ vagrant box list
+(...)
+op5      (libvirt, 0)
+
+$ rm package.box
 ```
+The imported box ("op5") is stored in `~/.vagrant.d/boxes/`. Presumably you can use `--force` with `box add` to replace (update) your local box.
 
 Now set up a new VM in your `Vagrantfile` like `lc72.vm.box = "op5"`. No other attributes are necessary but you probably wants hostnames:
 
