@@ -220,7 +220,7 @@ else
 
 	if [[ $major_version == "7" ]]; then
 		monurl="https://d2ubxhm80y3bwr.cloudfront.net/Downloads/\
-	op5_monitor_archive/op5-monitor-$monversion.x64.tar.gz"
+op5_monitor_archive/op5-monitor-$monversion.x64.tar.gz"
 
 		if curl -OL /dev/null --silent --head --fail "$monurl" &>/dev/null ; then
 			log "Downloading $monversion as provided in Vagrantfile."
@@ -231,7 +231,7 @@ else
 		fi
 	elif [[ $major_version == "8" ]]; then
 		monurl="https://d2ubxhm80y3bwr.cloudfront.net/Downloads/\
-	op5_monitor_archive/Monitor8/Tarball/op5-monitor-$monversion-x64.tar.gz"
+op5_monitor_archive/Monitor8/Tarball/op5-monitor-$monversion-x64.tar.gz"
 
 		if curl -OL /dev/null --silent --head --fail "$monurl" &>/dev/null ; then
 			log "Downloading $monversion as provided in Vagrantfile."

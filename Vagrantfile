@@ -46,7 +46,12 @@ Vagrant.configure("2") do |config|
     vc7.vm.hostname = "vc7"
     vc7.vm.network "forwarded_port", guest: 443, host: 4437
     vc7.vm.network "private_network", type: "dhcp"
-    vc7.vm.provision "shell", path: "provision.sh", :args => "-r -v -m 8.2.7"
+    vc7.vm.provision "shell", path: "provision.sh", :args => "-r -v -p -m 8.2.7"
+  end
+  config.vm.define "vc72" do |vc72|
+    vc72.vm.box = "op5"
+    vc72.vm.network "forwarded_port", guest: 443, host: 44372
+    vc72.vm.hostname = "vc72"
   end
   config.vm.define "vr7" do |vr7|
     vr7.vm.box = "generic/rhel7"
