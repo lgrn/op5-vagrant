@@ -61,7 +61,7 @@ install_php_debug_tools()
     log "Installing group 'Development Tools' via yum (be patient)."
     yum groupinstall "Development Tools" -y &>/dev/null
     log "Development tools have been installed. Starting xdebug download."
-    cd /tmp && curl -O https://xdebug.org/files/xdebug-2.4.1.tgz &>/dev/null
+    cd /tmp && curl -OL https://xdebug.org/files/xdebug-2.4.1.tgz &>/dev/null || log "Curl of xdebug exited $?"
     log "xdebug downloaded."
     tar xvf xdebug-2.4.1.tgz &>/dev/null && cd xdebug* || exit 1
     log "Running phpize."
@@ -222,9 +222,9 @@ else
 		monurl="https://d2ubxhm80y3bwr.cloudfront.net/Downloads/\
 	op5_monitor_archive/op5-monitor-$monversion.x64.tar.gz"
 
-		if curl -O /dev/null --silent --head --fail "$monurl" &>/dev/null ; then
+		if curl -OL /dev/null --silent --head --fail "$monurl" &>/dev/null ; then
 			log "Downloading $monversion as provided in Vagrantfile."
-			cd /vagrant && curl -O "$monurl" &>/dev/null
+			cd /vagrant && curl -OL "$monurl" &>/dev/null || log "Curl of $monurl exited $?"
 		else
 			log "Failed to find provided version: $monversion. Exiting."
 			exit 1
@@ -233,9 +233,9 @@ else
 		monurl="https://d2ubxhm80y3bwr.cloudfront.net/Downloads/\
 	op5_monitor_archive/Monitor8/Tarball/op5-monitor-$monversion-x64.tar.gz"
 
-		if curl -O /dev/null --silent --head --fail "$monurl" &>/dev/null ; then
+		if curl -OL /dev/null --silent --head --fail "$monurl" &>/dev/null ; then
 			log "Downloading $monversion as provided in Vagrantfile."
-			cd /vagrant && curl -O "$monurl" &>/dev/null
+			cd /vagrant && curl -OL "$monurl" &>/dev/null || log "Curl of $monurl exited $?"
 		else
 			log "Failed to find provided version: $monversion. Exiting."
 			exit 1
@@ -279,7 +279,7 @@ else
 fi
 
 log "Time remaining for your OP5 license (check_op5_license):"
-log "$(/opt/plugins/check_op5_license -w1 -c1 -T d)"
+log "$(/opt/plugins/check_op5_license -w1 -c1 -T d)" || log "Cannot check OP5 license. The installation likely failed."
 
 if [[ $phpdebug == "true" ]]; then
     install_php_debug_tools
