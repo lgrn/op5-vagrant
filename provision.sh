@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-PREFX="[v0.5.2]"
+PREFX="[v0.5.3]"
 if [[ -f /vagrant/secret.sh ]] ; then
 source /vagrant/secret.sh
 fi
@@ -8,18 +8,34 @@ fi
 
 usage()
 {
-    echo "Usage: provision.sh <-r|-p|-v|-t|-m|-n>"
+    echo "Usage: provision.sh <-r|-p|-v|-t|-m|-n|-x>"
     echo "  -r : Run the script."
     echo "  -p : Install libraries necessary for PHP debugging."
     echo "  -v : Provide verbose output, script is quite silent by default."
     echo "  -m : Supply a Monitor version to download, example: '8.2.3'"
     echo "  -n : [INTERNAL] Install The New UI(tm)"
+    echo "  -x : Install extras (see provision.sh)"
 }
 
 log()
 {
     TIMES='date +%T'
     [[ "$verbose" == "true" ]] && echo "$($TIMES)" "$PREFX" "$1"
+}
+
+install_extras()
+{
+    log "Installing extras."
+    yum install vim mlocate yum-utils git -y &>/dev/null
+    # add additional repos
+    yum-config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo &>/dev/null
+    yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo &>/dev/null
+    # install packages from additional repos
+    yum install gh ripgrep -y &>/dev/null
+    updatedb
+    git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
+    sh ~/.vim_runtime/install_awesome_vimrc.sh
+    log "Extras installed, mlocate db updated."
 }
 
 check_for_monitor_file()
@@ -143,15 +159,17 @@ run='false'
 phpdebug='false'
 verbose='false'
 newui='false'
+install_extras='false'
 
-while getopts "rpvtnm:" flag; do
+while getopts "rpvtnm:x" flag; do
   case ${flag} in
     r) run='true' ;;
     p) phpdebug='true' ;;
     v) verbose='true' ;;
     n) newui='true' ;;
     m) monversion=$OPTARG ;;
-    *) error "Unexpected option." ;;
+    x) install_extras='true' ;;
+    *) error 'Unexpected option.' ;;
   esac
 done
 
@@ -291,6 +309,12 @@ if [[ $newui == "true" ]]; then
     install_new_ui
 else
     log "Skipping new UI."
+fi
+
+if [[ $install_extras == "true" ]]; then
+    install_extras
+else
+    log "Skipping extras (-x not set)."
 fi
 
 echo "[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>]"

@@ -35,9 +35,9 @@ Vagrant.configure("2") do |config|
 end
 
 Vagrant.configure("2") do |config|
-#  NOTE: you probably need to uncomment the below line when running
+#  NOTE: you probably need to comment/uncomment the synced_folder line when running
 #        virtualbox as your provider. It conflicts with libvirt (above)
-##config.vm.synced_folder ".", "/vagrant", type: 'virtualbox'
+  config.vm.synced_folder ".", "/vagrant", type: 'virtualbox'
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "2048"
   end
@@ -46,7 +46,7 @@ Vagrant.configure("2") do |config|
     vc7.vm.hostname = "vc7"
     vc7.vm.network "forwarded_port", guest: 443, host: 4437
     vc7.vm.network "private_network", type: "dhcp"
-    vc7.vm.provision "shell", path: "provision.sh", :args => "-r -v -p -m 8.2.7"
+    vc7.vm.provision "shell", path: "provision.sh", :args => "-r -v -p -x -m 8.2.7"
   end
   config.vm.define "vc72" do |vc72|
     vc72.vm.box = "op5"
