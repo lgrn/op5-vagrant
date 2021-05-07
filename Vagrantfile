@@ -4,6 +4,8 @@
 # to use cool generated names, compile namkaran.go and put in:
 # foo.vm.hostname = %x(./namkaran [flags]).chomp
 
+Vagrant.require_version '>= 2.2.15'
+
 Vagrant.configure("2") do |config|
   config.vm.provider "libvirt" do |lv|
     lv.memory = "2048"
@@ -14,7 +16,7 @@ Vagrant.configure("2") do |config|
     lc7.vm.box = "centos/7"
     lc7.vm.hostname = "lc7"
     lc7.vm.network "forwarded_port", guest: 443, host: 4437
-    lc7.vm.provision "shell", path: "provision.sh", :args => "-r -v -m 8.2.7"
+    lc7.vm.provision "shell", path: "provision.sh", :args => "-r -v -p -x -m 8.3.0"
   end
   # libvirt existing box example (see README)
   config.vm.define "lc72" do |lc72|
@@ -46,7 +48,7 @@ Vagrant.configure("2") do |config|
     vc7.vm.hostname = "vc7"
     vc7.vm.network "forwarded_port", guest: 443, host: 4437
     vc7.vm.network "private_network", type: "dhcp"
-    vc7.vm.provision "shell", path: "provision.sh", :args => "-r -v -p -x -m 8.2.7"
+    vc7.vm.provision "shell", path: "provision.sh", :args => "-r -v -p -x -m 8.3.0"
   end
   config.vm.define "vc72" do |vc72|
     vc72.vm.box = "op5"
@@ -58,7 +60,7 @@ Vagrant.configure("2") do |config|
     vr7.vm.hostname = "vr7"
     vr7.vm.network "forwarded_port", guest: 443, host: 44377
     vr7.vm.network "private_network", type: "dhcp"
-    vr7.vm.provision "shell", path: "provision.sh", :args => "-r -v -m 8.2.7"
+    vr7.vm.provision "shell", path: "provision.sh", :args => "-r -v -p -x -m 8.3.0"
   end
 end
 
