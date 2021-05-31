@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
     lc7.vm.box = "centos/7"
     lc7.vm.hostname = "lc7"
     lc7.vm.network "forwarded_port", guest: 443, host: 4437
-    lc7.vm.provision "shell", path: "provision.sh", :args => "-r -v -p -x -m 8.3.0"
+    lc7.vm.provision "shell", path: "provision.sh", :args => "-r -v -p -x -m 8.3.1"
   end
   # libvirt existing box example (see README)
   config.vm.define "lc72" do |lc72|
@@ -60,7 +60,7 @@ Vagrant.configure("2") do |config|
     vr7.vm.hostname = "vr7"
     vr7.vm.network "forwarded_port", guest: 443, host: 44377
     vr7.vm.network "private_network", type: "dhcp"
-    vr7.vm.provision "shell", path: "provision.sh", :args => "-r -v -p -x -m 8.3.0"
+    vr7.vm.provision "shell", path: "provision.sh", :args => "-r -v -p -x -m 8.3.1"
   end
 end
 

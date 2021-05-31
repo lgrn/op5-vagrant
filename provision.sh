@@ -34,7 +34,7 @@ install_extras()
     yum install gh ripgrep -y &>/dev/null
     updatedb
     git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
-    sh ~/.vim_runtime/install_awesome_vimrc.sh
+    sh ~/.vim_runtime/install_basic_vimrc.sh
     log "Extras installed, mlocate db updated."
 }
 
@@ -269,7 +269,7 @@ if [[ $fileexists == "true" ]]; then
     cd /vagrant && tar xvf *onitor*.gz -C /tmp &>/dev/null
     log "Executing non-interactive \
 OP5 installation. This will take some time (~10min)."
-    cd /tmp/*onitor* && ./install.sh --noninteractive &>/dev/null
+    cd /tmp/*onitor* && ./install.sh --noninteractive 
     log "Installation process finished."
 else
     log "No monitor file found! Try the -m flag. Exiting."
