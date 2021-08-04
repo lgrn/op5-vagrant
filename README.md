@@ -12,7 +12,7 @@ You need a working Vagrant installation, and a working provider. This configurat
 
 ### Using libvirt
 
-NOTE: Ports are identical, so running Virtualbox and libvirt as providers simultaneously will not work with reconfiguration.
+NOTE: Ports are identical, so running Virtualbox and libvirt as providers simultaneously will not work without reconfiguration.
 
 Install libvirt stuff. Debian/Ubuntu example:
 
