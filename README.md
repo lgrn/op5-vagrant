@@ -1,3 +1,5 @@
+# ⛔ DEPRECATED
+
 # op5-vagrant
 
 For usage examples, see "Example use" below.
